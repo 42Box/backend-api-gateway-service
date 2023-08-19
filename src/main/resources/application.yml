@@ -13,7 +13,12 @@ spring:
     include: env
   cloud:
     gateway:
-      default-filters:
+      routes:
+        - id: auth-service
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/auth-service/**
+            - Method=GET,POST
 management:
   endpoints:
     web:
