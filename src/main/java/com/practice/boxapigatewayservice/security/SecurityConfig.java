@@ -94,7 +94,7 @@ public class SecurityConfig {
     configuration.addAllowedOrigin("*");
     configuration.addAllowedMethod("*");
     configuration.addAllowedHeader("*");
-    configuration.setAllowCredentials(true);
+//    configuration.setAllowCredentials(true);
     configuration.setMaxAge(1L);
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);
