@@ -32,12 +32,6 @@ public class GlobalFilter extends AbstractGatewayFilterFactory<GlobalFilter.Conf
 			log.info("Global Filter: baseMessage: {}", config.getBaseMessage());
 			if (config.isPreLogger()) {
 				log.info("Global Filter Start: request id -> {}", request.getId());
-				log.info("Request URI: {}", request.getURI());  // 이 부분을 추가합니다.
-			}
-
-			log.info("Global Filter: baseMessage: {}", config.getBaseMessage());
-			if (config.isPreLogger()) {
-				log.info("Global Filter Start: request id -> {}", request.getId());
 				log.info("Request URI: {}", request.getURI());
 
 				List<ServiceInstance> instances = discoveryClient.getInstances("AUTH-SERVICE");
