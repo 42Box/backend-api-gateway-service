@@ -60,7 +60,7 @@ public class SecurityConfig {
   }
 
 
-  /*
+  /**
    * 시큐리티에서 사용하는 AuthenticationWebFilter 를 생성합니다.
    * jwtServerAuthenticationConverter 를 통해 ROLE 을 주입합니다.
    *
@@ -70,7 +70,7 @@ public class SecurityConfig {
    * @see AuthenticationManager
    * @see JwtServerAuthenticationConverter
    * @see ServerWebExchangeMatchers
-   * */
+   */
   private AuthenticationWebFilter authenticationWebFilter() {
     AuthenticationWebFilter authFilter = new AuthenticationWebFilter(authenticationManager);
     authFilter.setServerAuthenticationConverter(jwtServerAuthenticationConverter);
@@ -78,7 +78,7 @@ public class SecurityConfig {
     return authFilter;
   }
 
-  /*
+  /**
    * CorsConfigurationSource 를 생성합니다.
    * 시큐리티의 Cors 설정을 관리합니다.
    *
@@ -86,7 +86,7 @@ public class SecurityConfig {
    *
    * @see CorsConfigurationSource
    * @see CorsConfiguration
-   * */
+   */
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
