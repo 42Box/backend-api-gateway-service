@@ -1,7 +1,10 @@
 package com.practice.boxapigatewayservice.filter.filter;
 
+import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -13,8 +16,11 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class GlobalFilter extends AbstractGatewayFilterFactory<GlobalFilter.Config> {
 
-	public GlobalFilter() {
+	private final DiscoveryClient discoveryClient;
+
+	public GlobalFilter(DiscoveryClient discoveryClient) {
 		super(Config.class);
+		this.discoveryClient = discoveryClient;
 	}
 
 	@Override
@@ -28,6 +34,18 @@ public class GlobalFilter extends AbstractGatewayFilterFactory<GlobalFilter.Conf
 				log.info("Global Filter Start: request id -> {}", request.getId());
 				log.info("Request URI: {}", request.getURI());  // 이 부분을 추가합니다.
 			}
+
+			log.info("Global Filter: baseMessage: {}", config.getBaseMessage());
+			if (config.isPreLogger()) {
+				log.info("Global Filter Start: request id -> {}", request.getId());
+				log.info("Request URI: {}", request.getURI());
+
+				List<ServiceInstance> instances = discoveryClient.getInstances("AUTH-SERVICE");
+				for (ServiceInstance instance : instances) {
+					log.info("Available instance: {} {}", instance.getHost(), instance.getPort());
+				}
+			}
+
 			return chain.filter(exchange).then(Mono.fromRunnable(() -> {
 				if (config.isPostLogger()) {
 					log.info("Global POST Filter Start: request id -> {}",
@@ -35,6 +53,21 @@ public class GlobalFilter extends AbstractGatewayFilterFactory<GlobalFilter.Conf
 				}
 			}));
 		};
+//		return (exchange, chain) -> {
+//			ServerHttpRequest request = exchange.getRequest();
+//
+//			log.info("Global Filter: baseMessage: {}", config.getBaseMessage());
+//			if (config.isPreLogger()) {
+//				log.info("Global Filter Start: request id -> {}", request.getId());
+//				log.info("Request URI: {}", request.getURI());
+//
+//				List<ServiceInstance> instances = discoveryClient.getInstances("AUTH-SERVICE");
+//				for (ServiceInstance instance : instances) {
+//					log.info("Available instance: {} {}", instance.getHost(), instance.getPort());
+//				}
+//			}
+//			return null;
+//		};
 	}
 
 
