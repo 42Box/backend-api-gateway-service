@@ -15,6 +15,12 @@ spring:
     include: env
   cloud:
     gateway:
+      default-filters:
+        - name: GlobalFilter
+          args:
+            baseMessage: Spring Cloud GateWay Global Filter
+            preLogger: true
+            postLogger: true
       routes:
         - id: auth-service
           uri: lb://AUTH-SERVICE
