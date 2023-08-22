@@ -90,11 +90,12 @@ public class SecurityConfig {
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
-    configuration.addAllowedOrigin("https://www.42box.kr");
+//    configuration.addAllowedOrigin("https://www.42box.kr");
+    configuration.addAllowedOrigin("*");
     configuration.addAllowedMethod("*");
     configuration.addAllowedHeader("*");
     configuration.setAllowCredentials(true);
-    configuration.setMaxAge(1L);
+//    configuration.setMaxAge(1L);
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);
     return source;
