@@ -90,6 +90,8 @@ public class SecurityConfig {
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
+    configuration.addAllowedOrigin("https://42box.kr");
+    configuration.addAllowedOrigin("https://42box.kr:443");
     configuration.addAllowedOrigin("https://www.42box.kr");
     configuration.addAllowedOrigin("https://www.42box.kr:443");
     configuration.addAllowedOrigin("http://localhost:3000");
