@@ -29,6 +29,7 @@ import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
 
   private final ActuatorPathMatcher actuatorPathMatcher;
+  private final UsersPathMatcher usersPathMatcher;
   private final AuthenticationManager authenticationManager;
   private final JwtServerAuthenticationConverter jwtServerAuthenticationConverter;
 
@@ -49,6 +50,7 @@ public class SecurityConfig {
   SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
     http.authorizeExchange(
         (request) -> request.matchers(actuatorPathMatcher).hasAnyAuthority("ROLE_ADMIN")
+            .matchers(usersPathMatcher).hasAnyAuthority("ROLE_ADMIN", "ROLE_AUTH_USER", "ROLE_USER")
             .anyExchange().permitAll().and()
             .addFilterAt(authenticationWebFilter(), SecurityWebFiltersOrder.AUTHENTICATION)
             .authorizeExchange().and().formLogin().disable().httpBasic()

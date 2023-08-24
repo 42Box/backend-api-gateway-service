@@ -1,5 +1,7 @@
 server:
   port: 8000
+  tomcat:
+    max-http-form-post-size: 3MB
 eureka:
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
@@ -21,6 +23,13 @@ spring:
           predicates:
             - Path=/auth-service/**
             - Method=GET,POST
+          filters:
+            - StripPrefix=1
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/me/**
+            - Method=GET,PUT
           filters:
             - StripPrefix=1
 management:
