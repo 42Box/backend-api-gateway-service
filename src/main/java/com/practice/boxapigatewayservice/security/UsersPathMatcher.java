@@ -23,9 +23,11 @@ public class UsersPathMatcher implements ServerWebExchangeMatcher {
   public Mono<MatchResult> matches(ServerWebExchange exchange) {
 
     String path = exchange.getRequest().getURI().getPath();
-    if (pathPatternParser.parse("/user-service/me/**").matches(PathContainer.parsePath(path))
-        || pathPatternParser.parse("/user-service/me**").matches(PathContainer.parsePath(path))
-        || pathPatternParser.parse("/user-service/me").matches(PathContainer.parsePath(path))) {
+    if (pathPatternParser.parse("/user-service/users/me/**").matches(PathContainer.parsePath(path))
+        || pathPatternParser.parse("/user-service/users/me**")
+        .matches(PathContainer.parsePath(path))
+        || pathPatternParser.parse("/user-service/users/me")
+        .matches(PathContainer.parsePath(path))) {
       return MatchResult.match();
     }
     return MatchResult.notMatch();

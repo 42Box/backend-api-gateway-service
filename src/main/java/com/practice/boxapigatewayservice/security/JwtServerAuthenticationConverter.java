@@ -38,7 +38,10 @@ public class JwtServerAuthenticationConverter implements ServerAuthenticationCon
       if (nickname == null) {
         throw new Exception();
       }
-      exchange.getResponse().getHeaders().add("nickname", nickname);
+      ServerHttpRequest request = exchange.getRequest();
+      nickname = nickname.replace("\"", "");
+      request.mutate().header("nickname", nickname).build();
+
       List<GrantedAuthority> authorities = new ArrayList<>();
       authorities.add(new SimpleGrantedAuthority("ROLE_AUTH_USER")); // 추후 개선
       return Mono.just(
@@ -50,8 +53,9 @@ public class JwtServerAuthenticationConverter implements ServerAuthenticationCon
 
   private String extractTokenFromCookie(ServerHttpRequest request) {
     MultiValueMap<String, HttpCookie> cookies = request.getCookies();
-    if (cookies.containsKey("box-auth")) {
-      List<HttpCookie> boxAuthCookies = cookies.get(envUtil.getEnv("jwt.token.AUTH_TOKEN_NAME"));
+    String tokenName = envUtil.getEnv("jwt.token.AUTH_TOKEN_NAME");
+    if (cookies.containsKey(tokenName)) {
+      List<HttpCookie> boxAuthCookies = cookies.get(tokenName);
       if (!boxAuthCookies.isEmpty()) {
         return boxAuthCookies.get(0).getValue();
       }

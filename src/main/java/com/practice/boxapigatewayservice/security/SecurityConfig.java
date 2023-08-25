@@ -32,6 +32,7 @@ public class SecurityConfig {
   private final UsersPathMatcher usersPathMatcher;
   private final AuthenticationManager authenticationManager;
   private final JwtServerAuthenticationConverter jwtServerAuthenticationConverter;
+//  private final JwtHeaderAdderFilter jwtHeaderAdderFilter;
 
   /**
    * Spring Security 의 설정을 담당합니다.
@@ -52,6 +53,7 @@ public class SecurityConfig {
         (request) -> request.matchers(actuatorPathMatcher).hasAnyAuthority("ROLE_ADMIN")
             .matchers(usersPathMatcher).hasAnyAuthority("ROLE_ADMIN", "ROLE_AUTH_USER", "ROLE_USER")
             .anyExchange().permitAll().and()
+//            .addFilterBefore(jwtHeaderAdderFilter, SecurityWebFiltersOrder.AUTHENTICATION)
             .addFilterAt(authenticationWebFilter(), SecurityWebFiltersOrder.AUTHENTICATION)
             .authorizeExchange().and().formLogin().disable().httpBasic()
             .authenticationEntryPoint(new HttpStatusServerEntryPoint(HttpStatus.UNAUTHORIZED)).and()
