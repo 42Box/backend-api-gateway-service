@@ -53,7 +53,6 @@ public class SecurityConfig {
         (request) -> request.matchers(actuatorPathMatcher).hasAnyAuthority("ROLE_ADMIN")
             .matchers(usersPathMatcher).hasAnyAuthority("ROLE_ADMIN", "ROLE_AUTH_USER", "ROLE_USER")
             .anyExchange().permitAll().and()
-//            .addFilterBefore(jwtHeaderAdderFilter, SecurityWebFiltersOrder.AUTHENTICATION)
             .addFilterAt(authenticationWebFilter(), SecurityWebFiltersOrder.AUTHENTICATION)
             .authorizeExchange().and().formLogin().disable().httpBasic()
             .authenticationEntryPoint(new HttpStatusServerEntryPoint(HttpStatus.UNAUTHORIZED)).and()
