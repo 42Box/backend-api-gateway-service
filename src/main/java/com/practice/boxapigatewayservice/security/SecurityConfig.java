@@ -32,6 +32,7 @@ public class SecurityConfig {
   private final UsersPathMatcher usersPathMatcher;
   private final AuthenticationManager authenticationManager;
   private final JwtServerAuthenticationConverter jwtServerAuthenticationConverter;
+//  private final JwtHeaderAdderFilter jwtHeaderAdderFilter;
 
   /**
    * Spring Security 의 설정을 담당합니다.

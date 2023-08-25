@@ -27,20 +27,33 @@ public class JwtServerAuthenticationConverter implements ServerAuthenticationCon
 
   @Override
   public Mono<Authentication> convert(ServerWebExchange exchange) {
+    ServerHttpRequest request = exchange.getRequest();
+
     try {
       String jwtToken = extractTokenFromCookie(exchange.getRequest());
       if (jwtToken == null) {
+        request = request.mutate().headers(headers -> headers.remove("nickname")).build();
+        request = request.mutate().headers(headers -> headers.remove("uuid")).build();
         throw new Exception();
       }
       DecodedJWT decodeToken = JWT.require(
           Algorithm.HMAC512(envUtil.getEnv("jwt.token.ACCESS_SECRET"))).build().verify(jwtToken);
       String nickname = JWT.decode(jwtToken).getClaim("nickname").toString();
-      if (nickname == null) {
+      String uuid = JWT.decode(jwtToken).getClaim("uuid").toString();
+      String role = JWT.decode(jwtToken).getClaim("role").toString();
+      if (nickname == null || uuid == null || role == null) {
         throw new Exception();
       }
-      exchange.getResponse().getHeaders().add("nickname", nickname);
+
+      nickname = nickname.replace("\"", "");
+      uuid = uuid.replace("\"", "");
+      role = role.replace("\"", "");
+
+      request.mutate().header("nickname", nickname).build();
+      request.mutate().header("uuid", uuid).build();
+
       List<GrantedAuthority> authorities = new ArrayList<>();
-      authorities.add(new SimpleGrantedAuthority("ROLE_AUTH_USER")); // 추후 개선
+      authorities.add(new SimpleGrantedAuthority(role)); // 추후 개선
       return Mono.just(
           new UsernamePasswordAuthenticationToken(authorities, jwtToken, authorities));
     } catch (Exception e) {
@@ -50,8 +63,9 @@ public class JwtServerAuthenticationConverter implements ServerAuthenticationCon
 
   private String extractTokenFromCookie(ServerHttpRequest request) {
     MultiValueMap<String, HttpCookie> cookies = request.getCookies();
-    if (cookies.containsKey("box-auth")) {
-      List<HttpCookie> boxAuthCookies = cookies.get(envUtil.getEnv("jwt.token.AUTH_TOKEN_NAME"));
+    String tokenName = envUtil.getEnv("jwt.token.AUTH_TOKEN_NAME");
+    if (cookies.containsKey(tokenName)) {
+      List<HttpCookie> boxAuthCookies = cookies.get(tokenName);
       if (!boxAuthCookies.isEmpty()) {
         return boxAuthCookies.get(0).getValue();
       }
