@@ -2,6 +2,7 @@ package com.practice.boxapigatewayservice.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
@@ -98,7 +99,12 @@ public class SecurityConfig {
     configuration.addAllowedOrigin("https://www.42box.kr");
     configuration.addAllowedOrigin("https://www.42box.kr:443");
     configuration.addAllowedOrigin("http://localhost:3000");
-    configuration.addAllowedMethod("*");
+    configuration.addAllowedMethod(HttpMethod.GET);
+    configuration.addAllowedMethod(HttpMethod.POST);
+    configuration.addAllowedMethod(HttpMethod.PUT);
+    configuration.addAllowedMethod(HttpMethod.DELETE);
+    configuration.addAllowedMethod(HttpMethod.PATCH);
+    configuration.addAllowedMethod(HttpMethod.HEAD);
     configuration.addAllowedHeader("*");
     configuration.setAllowCredentials(true);
 //    configuration.setMaxAge(1L);
