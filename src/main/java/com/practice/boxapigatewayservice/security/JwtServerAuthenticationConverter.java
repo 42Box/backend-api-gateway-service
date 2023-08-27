@@ -34,6 +34,8 @@ public class JwtServerAuthenticationConverter implements ServerAuthenticationCon
       if (jwtToken == null) {
         request = request.mutate().headers(headers -> headers.remove("nickname")).build();
         request = request.mutate().headers(headers -> headers.remove("uuid")).build();
+        request = request.mutate().headers(headers -> headers.remove("profileImagePath")).build();
+        request = request.mutate().headers(headers -> headers.remove("profileImageUrl")).build();
         throw new Exception();
       }
       DecodedJWT decodeToken = JWT.require(
@@ -41,16 +43,24 @@ public class JwtServerAuthenticationConverter implements ServerAuthenticationCon
       String nickname = JWT.decode(jwtToken).getClaim("nickname").toString();
       String uuid = JWT.decode(jwtToken).getClaim("uuid").toString();
       String role = JWT.decode(jwtToken).getClaim("role").toString();
-      if (nickname == null || uuid == null || role == null) {
+      String profileImagePath = JWT.decode(jwtToken).getClaim("profileImagePath").toString();
+      String profileImageUrl = JWT.decode(jwtToken).getClaim("profileImageUrl").toString();
+      if (nickname == null || uuid == null || role == null || profileImagePath == null
+          || profileImageUrl == null || nickname.isEmpty() || uuid.isEmpty() || role.isEmpty()
+          || profileImagePath.isEmpty() || profileImageUrl.isEmpty()) {
         throw new Exception();
       }
 
       nickname = nickname.replace("\"", "");
       uuid = uuid.replace("\"", "");
       role = role.replace("\"", "");
+      profileImagePath = profileImagePath.replace("\"", "");
+      profileImageUrl = profileImageUrl.replace("\"", "");
 
       request.mutate().header("nickname", nickname).build();
       request.mutate().header("uuid", uuid).build();
+      request.mutate().header("profileImagePath", profileImagePath).build();
+      request.mutate().header("profileImageUrl", profileImageUrl).build();
 
       List<GrantedAuthority> authorities = new ArrayList<>();
       authorities.add(new SimpleGrantedAuthority(role)); // 추후 개선
