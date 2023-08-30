@@ -32,6 +32,27 @@ spring:
             - Method=GET,PUT
           filters:
             - StripPrefix=1
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/users/me/scripts
+            - Method=POST,GET
+          filters:
+            - StripPrefix=1
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/users/me/scripts/**
+            - Method=GET,PUT,DELETE
+          filters:
+            - StripPrefix=1
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/users/profile/**
+            - Method=GET
+          filters:
+            - StripPrefix=1
         - id: board-service
           uri: lb://BOARD-SERVICE
           predicates:
