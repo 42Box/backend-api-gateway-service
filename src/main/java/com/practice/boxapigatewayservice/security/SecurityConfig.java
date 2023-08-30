@@ -31,6 +31,7 @@ public class SecurityConfig {
 
   private final ActuatorPathMatcher actuatorPathMatcher;
   private final UsersPathMatcher usersPathMatcher;
+  private final BoardsPathMatcher boardsPathMatcher;
   private final AuthenticationManager authenticationManager;
   private final JwtServerAuthenticationConverter jwtServerAuthenticationConverter;
 //  private final JwtHeaderAdderFilter jwtHeaderAdderFilter;
@@ -53,6 +54,7 @@ public class SecurityConfig {
     http.authorizeExchange(
         (request) -> request.matchers(actuatorPathMatcher).hasAnyAuthority("ROLE_ADMIN")
             .matchers(usersPathMatcher).hasAnyAuthority("ROLE_ADMIN", "ROLE_AUTH_USER", "ROLE_USER")
+            .matchers(boardsPathMatcher).hasAnyAuthority("ROLE_ADMIN", "ROLE_AUTH_USER", "ROLE_USER")
             .anyExchange().permitAll().and()
             .addFilterAt(authenticationWebFilter(), SecurityWebFiltersOrder.AUTHENTICATION)
             .authorizeExchange().and().formLogin().disable().httpBasic()
@@ -64,7 +66,7 @@ public class SecurityConfig {
   }
 
 
-  /*
+  /**
    * 시큐리티에서 사용하는 AuthenticationWebFilter 를 생성합니다.
    * jwtServerAuthenticationConverter 를 통해 ROLE 을 주입합니다.
    *
@@ -82,7 +84,7 @@ public class SecurityConfig {
     return authFilter;
   }
 
-  /*
+  /**
    * CorsConfigurationSource 를 생성합니다.
    * 시큐리티의 Cors 설정을 관리합니다.
    *
