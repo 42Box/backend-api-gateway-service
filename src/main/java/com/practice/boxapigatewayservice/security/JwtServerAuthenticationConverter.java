@@ -28,9 +28,15 @@ public class JwtServerAuthenticationConverter implements ServerAuthenticationCon
   @Override
   public Mono<Authentication> convert(ServerWebExchange exchange) {
     ServerHttpRequest request = exchange.getRequest();
-
     try {
-      String jwtToken = extractTokenFromCookie(exchange.getRequest());
+      String jwtToken = null;
+      String prefix = envUtil.getEnv("jwt.token.TOKEN_PREFIX");
+      String authHeader = request.getHeaders().getFirst("Authorization");
+      if (authHeader != null && authHeader.startsWith(prefix)) {
+        jwtToken = authHeader.substring(prefix.length() + 1);
+      } else {
+        jwtToken = extractTokenFromCookie(exchange.getRequest());
+      }
       if (jwtToken == null) {
         request = request.mutate().headers(headers -> headers.remove("nickname")).build();
         request = request.mutate().headers(headers -> headers.remove("uuid")).build();
