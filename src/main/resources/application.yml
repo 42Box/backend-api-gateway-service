@@ -68,6 +68,18 @@ spring:
           predicates:
             - Path=/board-service/script-boards/**
             - Method=GET,POST,PUT,DELETE
+        - id: comment-service
+          uri: lb://COMMENT-SERVICE
+          predicates:
+            - Path=/comment-service/script-boards/**
+            - Method=GET,POST,PUT,DELETE
+          filters:
+            - StripPrefix=1
+        - id: comment-service
+          uri: lb://COMMENT-SERVICE
+          predicates:
+            - Path=/comment-service/service-boards/**
+            - Method=GET,POST,PUT,DELETE
           filters:
             - StripPrefix=1
 management:
