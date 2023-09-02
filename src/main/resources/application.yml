@@ -59,6 +59,13 @@ spring:
         - id: board-service
           uri: lb://BOARD-SERVICE
           predicates:
+            - Path=/board-service/**
+            - Method=GET,POST,PUT,DELETE
+          filters:
+            - StripPrefix=1
+        - id: board-service
+          uri: lb://BOARD-SERVICE
+          predicates:
             - Path=/board-service/script-boards**
             - Method=GET,POST,PUT,DELETE
           filters:
