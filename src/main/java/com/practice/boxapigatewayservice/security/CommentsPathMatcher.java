@@ -15,7 +15,7 @@ import reactor.core.publisher.Mono;
  * @since : 2023/08/30
  */
 @Component
-public class BoardsPathMatcher implements ServerWebExchangeMatcher {
+public class CommentsPathMatcher implements ServerWebExchangeMatcher {
 
   private final PathPatternParser pathPatternParser = new PathPatternParser();
 
@@ -25,15 +25,11 @@ public class BoardsPathMatcher implements ServerWebExchangeMatcher {
     HttpMethod method = exchange.getRequest().getMethod();
     if (method == HttpMethod.POST || method == HttpMethod.PUT
         || method == HttpMethod.DELETE || method == HttpMethod.PATCH) {
-      if (pathPatternParser.parse("/board-service/script-boards")
+      if (pathPatternParser.parse("/comment-service")
           .matches(PathContainer.parsePath(path))
-          || pathPatternParser.parse("/board-service/script-boards**")
+          || pathPatternParser.parse("/comment-service/**")
           .matches(PathContainer.parsePath(path))
-          || pathPatternParser.parse("/board-service/script-boards/**")
-          .matches(PathContainer.parsePath(path))
-          || pathPatternParser.parse("/board-service/**")
-          .matches(PathContainer.parsePath(path))
-          || pathPatternParser.parse("/board-service**")
+          || pathPatternParser.parse("/comment-service**")
           .matches(PathContainer.parsePath(path))) {
         return MatchResult.match();
       }

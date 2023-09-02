@@ -32,6 +32,7 @@ public class SecurityConfig {
   private final ActuatorPathMatcher actuatorPathMatcher;
   private final UsersPathMatcher usersPathMatcher;
   private final BoardsPathMatcher boardsPathMatcher;
+  private final CommentsPathMatcher commentsPathMatcher;
   private final AuthenticationManager authenticationManager;
   private final JwtServerAuthenticationConverter jwtServerAuthenticationConverter;
 //  private final JwtHeaderAdderFilter jwtHeaderAdderFilter;
@@ -54,7 +55,10 @@ public class SecurityConfig {
     http.authorizeExchange(
         (request) -> request.matchers(actuatorPathMatcher).hasAnyAuthority("ROLE_ADMIN")
             .matchers(usersPathMatcher).hasAnyAuthority("ROLE_ADMIN", "ROLE_AUTH_USER", "ROLE_USER")
-            .matchers(boardsPathMatcher).hasAnyAuthority("ROLE_ADMIN", "ROLE_AUTH_USER", "ROLE_USER")
+            .matchers(boardsPathMatcher)
+            .hasAnyAuthority("ROLE_ADMIN", "ROLE_AUTH_USER", "ROLE_USER")
+            .matchers(commentsPathMatcher)
+            .hasAnyAuthority("ROLE_ADMIN", "ROLE_AUTH_USER", "ROLE_USER")
             .anyExchange().permitAll().and()
             .addFilterAt(authenticationWebFilter(), SecurityWebFiltersOrder.AUTHENTICATION)
             .authorizeExchange().and().formLogin().disable().httpBasic()
